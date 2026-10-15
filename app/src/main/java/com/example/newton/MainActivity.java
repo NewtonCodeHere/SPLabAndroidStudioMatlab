@@ -1,113 +1,57 @@
 package com.example.newton;
 
-import android.media.AudioAttributes;
-import android.media.AudioFormat;
-import android.media.AudioTrack;
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.TextView;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-
-    private TextView statusText;
-    private AudioTrack track;
-    private volatile boolean isPlaying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnPlay = findViewById(R.id.btnPlay);
-        Button btnStop = findViewById(R.id.btnStop);
-        statusText = findViewById(R.id.statusText);
+        TextView txt = findViewById(R.id.txt);
 
-        btnPlay.setOnClickListener(v -> {
-            if (!isPlaying) {
-                new Thread(this::playSynth).start();
-            }
-        });
+        double a = 2.0;    // Number under square root
+        double b = 10.0;   // Numerator
 
-        btnStop.setOnClickListener(v -> stopSynth());
-    }
+        // Initial estimate of 1/sqrt(a)
+        double y = 0.5;
 
-    private void playSynth() {
-        isPlaying = true;
-        runOnUiThread(() -> statusText.setText("Status: Playing Synthesized Music..."));
+        double actual = b / Math.sqrt(a);
 
-        int sampleRate = 44100;
-        double[] notes = {261.6, 293.7, 329.6, 349.2, 392.0, 440.0, 493.9, 523.3};
-        String[] noteNames = {"C4 (261.6 Hz)", "D4 (293.7 Hz)", "E4 (329.6 Hz)", "F4 (349.2 Hz)",
-                "G4 (392.0 Hz)", "A4 (440.0 Hz)", "B4 (493.9 Hz)", "C5 (523.3 Hz)"};
+        StringBuilder result = new StringBuilder();
 
-        int minBufferSize = AudioTrack.getMinBufferSize(
-                sampleRate,
-                AudioFormat.CHANNEL_OUT_MONO,
-                AudioFormat.ENCODING_PCM_16BIT
-        );
+        result.append("Division by Square Root using Newton-Raphson\n\n");
+        result.append("a = ").append(a).append("\n");
+        result.append("b = ").append(b).append("\n\n");
 
-        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .build();
+        result.append("MATLAB / Actual Result = ")
+                .append(String.format(Locale.US, "%.8f", actual)).append("\n\n");
 
-        AudioFormat audioFormat = new AudioFormat.Builder()
-                .setSampleRate(sampleRate)
-                .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                .build();
+        for (int i = 1; i <= 5; i++) {
+            // Newton-Raphson formula for reciprocal square root: y_{k+1} = y_k * (1.5 - 0.5 * a * y_k^2)
+            y = y * (1.5 - 0.5 * a * y * y);
 
-        track = new AudioTrack.Builder()
-                .setAudioAttributes(audioAttributes)
-                .setAudioFormat(audioFormat)
-                .setBufferSizeInBytes(Math.max(minBufferSize, sampleRate * 2))
-                .setTransferMode(AudioTrack.MODE_STREAM)
-                .build();
+            double approx = b * y;
+            double error = Math.abs(actual - approx);
 
-        try {
-            track.play();
-            for (int noteIdx = 0; noteIdx < notes.length && isPlaying; noteIdx++) {
-                double f = notes[noteIdx];
-                final String currentNote = noteNames[noteIdx];
-
-                runOnUiThread(() -> statusText.setText("Playing Note: " + currentNote));
-
-                short[] buf = new short[sampleRate / 2];
-                for (int i = 0; i < buf.length; i++) {
-                    buf[i] = (short) (Math.sin(2 * Math.PI * f * i / sampleRate) * 12000);
-                }
-                track.write(buf, 0, buf.length);
-            }
-        } catch (Exception ignored) {
-        } finally {
-            stopSynthTrackOnly();
-            isPlaying = false;
-            runOnUiThread(() -> statusText.setText("Status: Playback Finished"));
+            result.append("Iteration ").append(i).append("\n");
+            result.append("1/sqrt(a) = ")
+                    .append(String.format(Locale.US, "%.8f", y)).append("\n");
+            result.append("b/sqrt(a) = ")
+                    .append(String.format(Locale.US, "%.8f", approx)).append("\n");
+            result.append("Error = ")
+                    .append(String.format(Locale.US, "%.8f", error)).append("\n\n");
         }
-    }
 
-    private synchronized void stopSynthTrackOnly() {
-        if (track != null) {
-            try {
-                if (track.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-                    track.stop();
-                }
-            } catch (Exception ignored) {}
-            track.release();
-            track = null;
-        }
-    }
+        result.append("Observation:\n");
+        result.append("As the number of iterations increases,\n");
+        result.append("the approximation converges rapidly\n");
+        result.append("to the actual value.");
 
-    private void stopSynth() {
-        isPlaying = false;
-        stopSynthTrackOnly();
-        statusText.setText("Status: Stopped");
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopSynth();
-        super.onDestroy();
+        txt.setText(result.toString());
     }
 }

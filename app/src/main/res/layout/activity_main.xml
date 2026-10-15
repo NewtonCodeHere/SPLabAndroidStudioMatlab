@@ -1,41 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp">
+    android:padding="20dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Electronic Music Synthesizer"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:paddingBottom="24dp" />
-
-    <Button
-        android:id="@+id/btnPlay"
+        android:id="@+id/txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Play Synth Scale (C Major)"
-        android:padding="12dp" />
-
-    <Button
-        android:id="@+id/btnStop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Stop Playback"
-        android:padding="12dp"
-        android:layout_marginTop="12dp" />
-
-    <TextView
-        android:id="@+id/statusText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Status: Ready"
         android:textSize="18sp"
-        android:textStyle="italic"
-        android:paddingTop="32dp" />
+        android:lineSpacingExtra="4dp" />
 
-</LinearLayout>
+</ScrollView>
