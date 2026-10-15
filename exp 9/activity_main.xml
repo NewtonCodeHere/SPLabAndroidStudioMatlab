@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Doppler Effect Simulation"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/freqText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Base Frequency: 500 Hz"
+            android:textSize="16sp" />
+
+        <SeekBar
+            android:id="@+id/freqBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="2000"
+            android:progress="500"
+            android:paddingBottom="16dp" />
+
+        <TextView
+            android:id="@+id/posText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Position: At Observer (Center)"
+            android:textSize="16sp" />
+
+        <SeekBar
+            android:id="@+id/posBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="50"
+            android:paddingBottom="20dp" />
+
+        <Button
+            android:id="@+id/btnOriginal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Play Original Sound (f₀)" />
+
+        <Button
+            android:id="@+id/btnApproaching"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Play Approaching Sound (Higher Pitch)" />
+
+        <Button
+            android:id="@+id/btnReceding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Play Receding Sound (Lower Pitch)" />
+
+        <Button
+            android:id="@+id/btnSimulate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Simulate Vehicle Passing" />
+
+        <Button
+            android:id="@+id/btnStop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Stop Audio" />
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status: Ready"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingTop="20dp"
+            android:gravity="center" />
+
+    </LinearLayout>
+</ScrollView>
